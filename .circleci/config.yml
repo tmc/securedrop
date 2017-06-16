@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: cd securedrop && docker build -t securedrop:${CIRCLECI_SHA1} .
+      - run: cd securedrop && docker build -t securedrop:${CIRCLE_SHA1} .
   testinfra:
     docker:
       - image: gcr.io/cloud-builders/docker
@@ -19,11 +19,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: cd testinfra && docker build -t securedrop-testinfra:${CIRCLECI_SHA1} .
+      - run: cd testinfra && docker build -t securedrop-testinfra:${CIRCLE_SHA1} .
   run-tests:
     docker:
-      - image: securedrop:${CIRCLECI_SHA1}
-      - image: securedrop-testinfra:${CIRCLECI_SHA1}
+      - image: securedrop:${CIRCLE_SHA1}
+      - image: securedrop-testinfra:${CIRCLE_SHA1}
         command: [./test.py, localhost]
     working_directory: /build
     environment:
@@ -39,6 +39,6 @@ workflows:
       - build
       - testinfra
       - run-tests:
-        requires:
-        - build
-        - testinfra
+          requires:
+          - build
+          - testinfra

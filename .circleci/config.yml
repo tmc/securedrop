@@ -2,8 +2,43 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang
-    working_directory: /root/sd
+      - image: gcr.io/cloud-builders/docker
+    working_directory: /build
+    environment:
+      DOCKER_API_VERSION=1.23
     steps:
       - checkout
-      - run: echo
+      - setup_remote_docker
+      - run: cd securedrop && docker build -t securedrop:${CIRCLECI_SHA1} .
+  testinfra:
+    docker:
+      - image: gcr.io/cloud-builders/docker
+    working_directory: /build
+    environment:
+      DOCKER_API_VERSION=1.23
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: cd testinfra && docker build -t securedrop-testinfra:${CIRCLECI_SHA1} .
+  run-tests:
+    docker:
+      - image: securedrop:${CIRCLECI_SHA1}
+      - image: securedrop-testinfra:${CIRCLECI_SHA1}
+        command: [./test.py, localhost]
+    working_directory: /build
+    environment:
+      DOCKER_API_VERSION=1.23
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: cd testinfra && docker build -t securedrop-testinfra .
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - testinfra
+      - run-tests:
+        requires:
+        - build
+        - testinfra

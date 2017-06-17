@@ -7,9 +7,10 @@ jobs:
     environment:
       DOCKER_API_VERSION=1.23
     steps:
+      - run: apt-get install -y make
       - checkout
       - setup_remote_docker
-      - run: cd securedrop && docker build -t securedrop:${CIRCLE_SHA1} .
+      - run: cd securedrop && make images TAG=${CIRCLE_SHA1}
   testinfra:
     docker:
       - image: gcr.io/cloud-builders/docker
@@ -17,21 +18,26 @@ jobs:
     environment:
       DOCKER_API_VERSION=1.23
     steps:
+      - run: apt-get install -y make
       - checkout
       - setup_remote_docker
-      - run: cd testinfra && docker build -t securedrop-testinfra:${CIRCLECI_SHA1} .
+      - run: cd testinfra && make images TAG=${CIRCLE_SHA1}
   run-tests:
     docker:
-      - image: securedrop:${CIRCLECI_SHA1}
-      - image: securedrop-testinfra:${CIRCLECI_SHA1}
-        command: [./test.py, localhost]
+      - image: gcr.io/cloud-builders/docker
     working_directory: /build
     environment:
       DOCKER_API_VERSION=1.23
     steps:
+      - run: apt-get install -y make
       - checkout
       - setup_remote_docker
-      - run: cd testinfra && docker build -t securedrop-testinfra .
+      - run: make images TAG=${CIRCLE_SHA1}
+      - run: |
+          docker run -d --name development securedrop:${CIRCLE_SHA1}
+      - run: |
+          sleep 5
+          docker run --network container:development securedrop-testinfra:${CIRCLE_SHA1}
 workflows:
   version: 2
   build-and-test:

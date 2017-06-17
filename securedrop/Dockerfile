@@ -13,4 +13,4 @@ RUN pip install -r requirements/securedrop-requirements.txt
 COPY . /app
 
 EXPOSE 8080 8081
-CMD ['./manage.py','run']
+CMD ["./manage.py", "run"]

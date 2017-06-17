@@ -2,5 +2,6 @@
 set -euo pipefail
 set -x
 Xvfb :1 &
+export DISPLAY=:1
 redis-server &
 pytest "$@"

@@ -1,4 +1,4 @@
-TAG ?= $(shell git describe --always --long --dirty)
+TAG ?= $(shell git rev-parse HEAD)
 IMAGE = securedrop-testinfra
 
 images:

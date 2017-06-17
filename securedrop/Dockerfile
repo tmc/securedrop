@@ -7,7 +7,7 @@ RUN gem install sass -v 3.4.23 # refs securedrop/issues/1594
 
 WORKDIR /app
 
-COPY requirements/securedrop-requirements.txt requirements/securedrop-requirements.txt
+COPY requirements requirements
 RUN pip install -r requirements/securedrop-requirements.txt
 
 COPY . /app

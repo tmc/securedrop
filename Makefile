@@ -3,6 +3,10 @@ images:
 	$(MAKE) -C securedrop images
 	$(MAKE) -C testinfra images
 
+.PHONY: test
+test:
+	$(MAKE) -C securedrop test
+
 .PHONY: ci-spinup
 ci-spinup:
 	./devops/scripts/ci-spinup.sh

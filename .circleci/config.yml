@@ -11,6 +11,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: cd securedrop && make images TAG=${CIRCLE_SHA1}
+      - run: cd securedrop && make test TAG=${CIRCLE_SHA1}
   testinfra:
     docker:
       - image: gcr.io/cloud-builders/docker
@@ -22,29 +23,3 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: cd testinfra && make images TAG=${CIRCLE_SHA1}
-  run-tests:
-    docker:
-      - image: gcr.io/cloud-builders/docker
-    working_directory: /build
-    environment:
-      DOCKER_API_VERSION=1.23
-    steps:
-      - run: apt-get install -y make
-      - checkout
-      - setup_remote_docker
-      - run: make images TAG=${CIRCLE_SHA1}
-      - run: |
-          docker run -d --name development securedrop:${CIRCLE_SHA1}
-      - run: |
-          sleep 5
-          docker run --network container:development securedrop-testinfra:${CIRCLE_SHA1}
-workflows:
-  version: 2
-  build-and-test:
-    jobs:
-      - build
-      - testinfra
-      - run-tests:
-        requires:
-        - build
-        - testinfra

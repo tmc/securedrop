@@ -1,0 +1,4 @@
+# this file is concatonated onto Dockerfile for use in building a test image
+RUN pip install -r requirements/test-requirements.txt
+RUN touch /app/config.py
+CMD ["pytest"]

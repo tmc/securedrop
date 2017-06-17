@@ -4,11 +4,14 @@ IMAGE = securedrop
 .PHONY: images
 images:
 	docker build -t $(IMAGE):$(TAG) .
-	cat Dockerfile Dockerfile.test | docker build -f - -t $(IMAGE)-test:$(TAG) .
+	# combine dockerfiles but strip out first COPY for better cache utilization
+	cat Dockerfile* |sed '/#skip-if-test$$/N;/#skip-if-test/d' | docker build -f - -t $(IMAGE)-test:$(TAG) .
 
 .PHONY: test
 test:
-	docker run -ti $(IMAGE)-test:$(TAG) pytest -vvvv $(TESTFILES)
+	env
+	echo $(TESTFILES)
+	docker run -ti $(IMAGE)-test:$(TAG) ./test -vvvv $(TESTFILES)
 
 .PHONY: test-config
 test-config:

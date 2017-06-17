@@ -1,5 +1,7 @@
 # this file is concatonated onto Dockerfile for use in building a test image
-RUN apt-get install -y firefox
+RUN apt-get install -y firefox xvfb
 RUN pip install -r requirements/test-requirements.txt
+COPY . /app
 RUN make test-config
+
 CMD ["pytest"]

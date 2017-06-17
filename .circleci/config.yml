@@ -12,7 +12,8 @@ jobs:
       - setup_remote_docker
       - run: cd securedrop && make images TAG=${CIRCLE_SHA1}
       - run: |
-          export TESTFILES=$(cd securedrop; circleci tests glob 'tests/test*py' 'tests/**/test*py' |circleci tests split --split-by=timings)
+          export TESTFILES=$(cd securedrop; circleci tests glob 'tests/test*py' 'tests/**/test*py' |circleci tests split --split-by=timings | xargs echo)
+          echo $TESTFILES
           cd securedrop && make test TAG=${CIRCLE_SHA1}
   testinfra:
     docker:

@@ -2,7 +2,7 @@ FROM ubuntu@sha256:30204139c6ab96ebd75d72f34db390f28c4decd5e563488b4e485bf979397
 
 RUN apt-get update # 2017-06-15
 RUN apt-get install -y \
-	python-pip libpython2.7-dev libssl-dev secure-delete gnupg2 ruby
+	python-pip libpython2.7-dev libssl-dev secure-delete gnupg2 ruby redis-server
 RUN gem install sass -v 3.4.23 # refs securedrop/issues/1594
 
 WORKDIR /app
@@ -10,6 +10,7 @@ WORKDIR /app
 COPY requirements requirements
 RUN pip install -r requirements/securedrop-requirements.txt
 
+#skip-if-test
 COPY . /app
 
 EXPOSE 8080 8081

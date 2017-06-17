@@ -8,7 +8,7 @@ images:
 
 .PHONY: test
 test:
-	docker run -ti $(IMAGE)-test:$(TAG) pytest -vvvv -x $(TESTFILES)
+	docker run -ti $(IMAGE)-test:$(TAG) pytest -vvvv $(TESTFILES)
 
 .PHONY: test-config
 test-config:

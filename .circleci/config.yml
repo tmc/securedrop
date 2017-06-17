@@ -11,7 +11,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: cd securedrop && make images TAG=${CIRCLE_SHA1}
-      - run: cd securedrop && make test TAG=${CIRCLE_SHA1}
+      - run: |
+          export TESTFILES=$(cd securedrop; circleci tests glob 'tests/test*py' 'tests/**/test*py' |circleci tests split --split-by=timings)
+          cd securedrop && make test TAG=${CIRCLE_SHA1}
   testinfra:
     docker:
       - image: gcr.io/cloud-builders/docker

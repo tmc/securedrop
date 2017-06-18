@@ -16,7 +16,7 @@ jsmin==2.2.2
 markupsafe==1.0           # via jinja2
 psutil==5.2.2
 pycrypto==2.6.1
-pyotp==2.2.5
+pyotp==2.2.6
 qrcode==5.3
 redis==2.10.5
 rq==0.8.0

@@ -11,9 +11,10 @@ argh==0.26.2              # via sphinx-autobuild, watchdog
 asn1crypto==0.22.0        # via cryptography
 babel==2.4.0              # via sphinx
 backports-abc==0.5        # via tornado
+bcrypt==3.1.3             # via paramiko
 boto==2.47.0
 certifi==2017.4.17        # via requests, tornado
-cffi==1.10.0              # via cryptography
+cffi==1.10.0              # via bcrypt, cryptography, pynacl
 chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
 cryptography==1.9         # via paramiko
@@ -27,7 +28,7 @@ ipaddress==1.0.18         # via cryptography
 jinja2==2.8.1             # via ansible, sphinx
 livereload==2.5.1         # via sphinx-autobuild
 markupsafe==1.0           # via jinja2
-paramiko==2.1.2           # via ansible
+paramiko==2.2.1           # via ansible
 pathtools==0.1.2          # via sphinx-autobuild, watchdog
 pip-tools==1.9.0
 port-for==0.3.1           # via sphinx-autobuild
@@ -36,13 +37,14 @@ pyasn1==0.2.3             # via paramiko
 pycparser==2.17           # via cffi
 pycrypto==2.6.1           # via ansible
 pygments==2.2.0           # via sphinx
-pytest-xdist==1.16.0
-pytest==3.1.1             # via pytest-xdist, testinfra
+pynacl==1.1.2             # via paramiko
+pytest-xdist==1.17.1
+pytest==3.1.2             # via pytest-xdist, testinfra
 pytz==2017.2              # via babel
 pyyaml==3.12              # via ansible, sphinx-autobuild, watchdog
-requests==2.17.3          # via sphinx
+requests==2.18.1          # via sphinx
 singledispatch==3.4.0.3   # via tornado
-six==1.10.0               # via cryptography, livereload, pip-tools, singledispatch, sphinx, testinfra
+six==1.10.0               # via bcrypt, cryptography, livereload, pip-tools, pynacl, singledispatch, sphinx, testinfra
 snowballstemmer==1.2.1    # via sphinx
 sphinx-autobuild==0.6.0
 sphinx-rtd-theme==0.2.4

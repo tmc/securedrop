@@ -5,4 +5,5 @@ Xvfb :1 &
 export DISPLAY=:1
 haveged &
 redis-server &
+tail -F tests/log/firefox.log &
 pytest "$@"

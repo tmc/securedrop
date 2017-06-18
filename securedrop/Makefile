@@ -11,7 +11,7 @@ images:
 test:
 	env
 	echo $(TESTFILES)
-	docker run -ti $(IMAGE)-test:$(TAG) ./test -vvvv $(TESTFILES)
+	docker run --privileged -ti $(IMAGE)-test:$(TAG) ./test -vvvv $(TESTFILES)
 
 .PHONY: test-config
 test-config:

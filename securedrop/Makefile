@@ -19,4 +19,8 @@ test-config:
 	journalist_secret_key=$(shell head -c 32 /dev/urandom | base64) \
 	scrypt_id_pepper=$(shell head -c 32 /dev/urandom | base64) \
 	scrypt_gpg_pepper=$(shell head -c 32 /dev/urandom | base64) \
-					  python -c 'import os; from jinja2 import Environment, FileSystemLoader; env = Environment(loader=FileSystemLoader(".")); env.get_template("config.py.example"); open("config.py", "w").write(env.get_template("config.py.example").render(dict((k, {"stdout":v}) for k,v in os.environ.iteritems())))'
+	python -c 'import os; from jinja2 import Environment, FileSystemLoader; \
+         env = Environment(loader=FileSystemLoader(".")); \
+         ctx = {"securedrop_app_gpg_fingerprint": "65A1B5FF195B56353CC63DFFCC40EF1228271441"}; \
+         ctx.update(dict((k, {"stdout":v}) for k,v in os.environ.iteritems())); \
+         ctx = open("config.py", "w").write(env.get_template("config.py.example").render(ctx))'

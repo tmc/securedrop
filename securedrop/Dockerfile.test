@@ -1,6 +1,15 @@
 # this file is concatonated onto Dockerfile for use in building a test image
 RUN apt-get install -y firefox xvfb
 RUN apt-get install -y haveged
+RUN apt-get install -y curl
+
+ENV GECKODRIVER_VERSION=v0.17.0
+ENV GECKODRIVER_CHECKSUM=3154274c050d724eb2f4e8986a58ed37c0138b48304692bf7eeed827a5e82319
+RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/${GECKODRIVER_VERSION}/geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz && \
+    shasum -a 256 geckodriver*gz && \
+    echo "${GECKODRIVER_CHECKSUM}  geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz" | shasum -a 256 -c - && \
+	tar xvf geckodriver-${GECKODRIVER_VERSION}-linux64.tar.gz && \
+	mv geckodriver /usr/local/bin
 RUN pip install -r requirements/test-requirements.txt
 COPY . /app
 RUN make test-config

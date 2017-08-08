@@ -5,10 +5,12 @@ PWD := $(shell pwd)
 .PHONY: app-images
 app-images: ## Create securedrop application docker images
 	$(MAKE) -C securedrop images
+	$(MAKE) -C testinfra images
 
 .PHONY: app-test
 app-test: ## Run securedrop application level tests
 	$(MAKE) -C securedrop test
+	$(MAKE) -C testinfra test
 
 .PHONY: app-testclean
 app-testclean: ## Delete securedrop application related containers

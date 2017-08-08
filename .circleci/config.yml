@@ -112,13 +112,13 @@ jobs:
       - store_artifacts:
           path: /root/sd/junit
 
-  tests:
+  app-tests:
     docker:
       - image: gcr.io/cloud-builders/docker
     working_directory: /build
     environment:
       DOCKER_API_VERSION=1.23
-    parallelism: 3
+    parallelism: 1
     steps:
       - run: apt-get install -y make
       - checkout
@@ -129,7 +129,7 @@ jobs:
             - v1-sd-layers-{{ .Branch }}-
             - v1-sd-layers-
           paths:
-            - /caches/layers.tar.gz
+            - /caches/layers.tar
 
       - run:
           name: Load image layer cache
@@ -177,15 +177,71 @@ jobs:
       - store_artifacts:
           path: ~/test-results
 
+  testinfra-tests:
+    docker:
+      - image: gcr.io/cloud-builders/docker
+    working_directory: /build
+    environment:
+      DOCKER_API_VERSION=1.23
+    steps:
+      - run: apt-get install -y make
+      - checkout
+      - setup_remote_docker
+
+      - restore_cache:
+          keys:
+            - v1-sdti-layers-{{ .Branch }}-
+          paths:
+            - /caches/layers.tar
+
+      - run:
+          name: Load image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/layers.tar |true
+
+      - run:
+          name: Build Docker images
+          command: |
+            set +o pipefail
+            docker images
+            fromtag=$(docker images |grep securedrop-testinfra-test |head -n1 |awk '{print $2}')
+            cd testinfra && EXTRA_BUILD_ARGS="--cache-from securedrop-testinfra-test:${fromtag}" make images TAG=${CIRCLE_SHA1}
+
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker images
+            docker save -o /caches/layers.tar securedrop-testinfra-test:${CIRCLE_SHA1}
+
+      - save_cache:
+          key: v1-sdti-layers-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/layers.tar
+
+      - run: mkdir -p ~/test-results
+
+      - run: |
+          set +o pipefail
+          docker rm -f securedrop-testinfra-test |true
+          cd testinfra && make test TAG=${CIRCLE_SHA1}
+
+      - run:
+          name: Report results
+          command: |
+            docker cp securedrop-testinfra-test:/tmp/test-results ~/
+          when: always
+
+      - store_test_results:
+          path: ~/test-results
+
+      - store_artifacts:
+          path: ~/test-results
+
 workflows:
   version: 2
   securedrop_ci:
     jobs:
-      - tests
-      - docs-lint
-      - staging-test:
-          requires:
-            - docs-lint
-      - staging-test-with-rebase:
-          requires:
-            - docs-lint
+      - app-tests
+      - testinfra-tests

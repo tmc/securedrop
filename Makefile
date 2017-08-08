@@ -2,6 +2,15 @@ DEFAULT_GOAL: help
 SHELL := /bin/bash
 PWD := $(shell pwd)
 
+.PHONY: images
+images:
+	$(MAKE) -C securedrop images
+	$(MAKE) -C testinfra images
+
+.PHONY: test
+test:
+	$(MAKE) -C securedrop test
+
 .PHONY: ci-spinup
 ci-spinup: ## Creates AWS EC2 hosts for testing staging environment.
 	./devops/scripts/ci-spinup.sh

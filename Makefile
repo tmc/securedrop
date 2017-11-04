@@ -25,7 +25,7 @@ ci-run: ## Provisions AWS EC2 hosts for testing staging environment.
 
 .PHONY: ci-go
 ci-go: ## Creates, provisions, tests, and destroys AWS EC2 hosts for testing staging environment.
-	@if [[ "${CIRCLE_BRANCH}" != docs-* ]]; then molecule test -s aws; else echo Not running on docs branch...; fi
+	@if [[ "${CIRCLE_BRANCH}" != docs-* && "${CIRCLE_PROJECT_USERNAME}" = "freedomofpress" ]]; then molecule test -s aws; else echo Skipping ec2 staging tests; fi
 
 .PHONY: docs-lint
 docs-lint: ## Check documentation for common syntax errors.

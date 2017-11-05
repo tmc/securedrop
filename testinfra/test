@@ -4,4 +4,5 @@ set -x
 Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
 export DISPLAY=:1
 
+sleep 1
 SECUREDROP_TESTINFRA_TARGET_HOST=circleci testinfra -v ./development/

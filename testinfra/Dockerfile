@@ -10,4 +10,7 @@ COPY requirements.txt /testinfra
 
 RUN pip install -r requirements.txt
 
+# todo: move up
+RUN apt-get install -y xvfb
+
 COPY . /testinfra

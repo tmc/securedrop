@@ -13,3 +13,7 @@ test:
 		--name $(IMAGE)-test \
 		-ti $(IMAGE)-test:$(TAG) \
 		./test
+
+.PHONY: testclean
+testclean:
+	docker rm -f $(IMAGE)-test

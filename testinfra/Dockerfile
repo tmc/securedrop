@@ -6,6 +6,8 @@ RUN apt-get install -y \
 
 WORKDIR /testinfra
 
-COPY . /testinfra
+COPY requirements.txt /testinfra
 
 RUN pip install -r requirements.txt
+
+COPY . /testinfra

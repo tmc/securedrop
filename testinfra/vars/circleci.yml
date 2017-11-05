@@ -1,0 +1,3 @@
+---
+securedrop_user: circleci
+securedrop_data: /var/lib/securedrop

@@ -4,8 +4,8 @@ RUN apt-get update # 2017-06-15
 RUN apt-get install -y \
 	make git curl python-pip libffi-dev libssl-dev libyaml-dev libpython2.7-dev
 
-WORKDIR /build
+WORKDIR /testinfra
 
-COPY . /build/testinfra
+COPY . /testinfra
 
-RUN pip install -r testinfra/requirements.txt
+RUN pip install -r requirements.txt

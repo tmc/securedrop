@@ -57,6 +57,9 @@ class FunctionalTest(object):
         connrefused_retry_count = 3
         connrefused_retry_interval = 5
 
+        os.environ['DISPLAY'] = ':'  + str(int(os.environ.get('PYTEST_XDIST_WORKER', '0').replace('gw',''))+1)
+        print os.environ['DISPLAY']
+
         for i in range(connrefused_retry_count + 1):
             try:
                 driver = webdriver.Firefox(firefox_binary=firefox,

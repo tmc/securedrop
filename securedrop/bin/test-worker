@@ -12,4 +12,5 @@ touch /root/.ssh/authorized_keys
 chmod 0600 /root/.ssh/authorized_keys
 echo ${PK} | base64 -d >> /root/.ssh/authorized_keys
 export USER=root
+export PATH=/app/test-venv/bin:$PATH
 /usr/sbin/sshd -D

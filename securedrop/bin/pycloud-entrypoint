@@ -32,4 +32,4 @@ test -d test-venv || (
 )
 
 set -x
-pytest -v -x -s --cloud-nodes "${workers[*]}" --cloud-virtualenv-path=test-venv --cloud-max-processes=1 --cloud-chdir=../app "$@"
+pytest -v --cloud-nodes "${workers[*]}" --cloud-virtualenv-path=test-venv --cloud-max-processes=1 --cloud-chdir=../app "$@"

@@ -3,3 +3,4 @@
 static/gen
 static/.webassets-cache
 tests/log/*
+test-venv

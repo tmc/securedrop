@@ -26,22 +26,16 @@ RUN curl -LO https://launchpad.net/~ubuntu-mozilla-security/+archive/ubuntu/ppa/
     dpkg -i firefox*deb && apt-get install -f && \
     paxctl -cm /usr/lib/firefox/firefox
 
-#
-# This can be removed when upgrading to something more recent than trusty
-#
-RUN echo deb http://archive.ubuntu.com/ubuntu/ zesty main > /etc/apt/sources.list.d/zesty.list
-RUN apt-get update
-RUN apt-get install -y gettext
-RUN rm /etc/apt/sources.list.d/zesty.list
-RUN apt-get update
+RUN pip install virtualenv
+WORKDIR /app
+RUN virtualenv test-venv
+ENV PATH=/app/test-venv/bin:$PATH
 
 COPY requirements requirements
 RUN pip install -r requirements/securedrop-requirements.txt
 
 # test requirements:
 RUN pip install -r requirements/test-requirements.txt
-
-WORKDIR /app
 
 COPY static static
 COPY sass sass

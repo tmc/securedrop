@@ -1,4 +1,5 @@
 *.pyc
 .sass-cache
-static/css/*
+static/gen
+static/.webassets-cache
 tests/log/*

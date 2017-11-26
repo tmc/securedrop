@@ -18,6 +18,10 @@ test:
 		-ti $(IMAGE)-test:$(TAG) \
 		./bin/test -v $(TESTFILES)
 
+.PHONY: test-pycloud
+test-pycloud:
+	docker run -ti --privileged -e TAG=$(TAG) -v /var/run/docker.sock:/var/run/docker.sock -v $(shell which docker):/usr/bin/docker securedrop-test:$(TAG) bash -x bin/pycloud-entrypoint
+
 .PHONY: testclean
 testclean:
 	-docker rm -f $(IMAGE)-test

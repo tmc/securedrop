@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+export DISPLAY=:1
+Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
+haveged &
+redis-server &
+
+echo -n 4096 > /proc/sys/kernel/random/write_wakeup_threshold
+
+mkdir /root/.ssh
+touch /root/.ssh/authorized_keys
+chmod 0600 /root/.ssh/authorized_keys
+echo ${PK} | base64 -d >> /root/.ssh/authorized_keys
+export USER=root
+/usr/sbin/sshd -D

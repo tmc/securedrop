@@ -1,0 +1,35 @@
+#!/bin/bash
+set -euo pipefail
+set -x
+N=${N_WORKERS:-3}
+test -f ~/.ssh/id_rsa || ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+pk="$(cat ~/.ssh/id_rsa.pub|base64 -w0)"
+workers=()
+Gids=()
+for worker in $(seq "${N}"); do
+  cid=$(docker run -d --privileged -e PK="${pk}" securedrop-test:${TAG} bin/test-worker)
+  cids+=("${cid}")
+  workers+=($(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${cid}))
+done
+function cleanup {
+  #echo "${cids[*]}" | xargs docker kill
+  #echo "${cids[*]}" | xargs docker rm -f
+  echo skipped
+}
+trap cleanup EXIT
+
+echo "${workers[*]}"
+export USER=root
+echo "Host *" >> ~/.ssh/config
+echo "    StrictHostKeyChecking no" > ~/.ssh/config
+test -d test-venv || (
+  set +euo pipefail
+  pip install virtualenv
+  virtualenv test-venv
+  . test-venv/bin/activate
+  pip install -r requirements/securedrop-requirements.txt
+  pip install -r requirements/test-requirements.txt
+)
+
+set -x
+pytest -v -x -s --cloud-nodes "${workers[*]}" --cloud-virtualenv-path=test-venv --cloud-max-processes=1 --cloud-chdir=../app "$@"

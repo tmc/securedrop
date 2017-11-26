@@ -11,6 +11,13 @@ RUN gem install sass -v 3.4.23
 RUN apt-get install -y firefox
 RUN apt-get install -y git xvfb haveged curl gettext paxctl
 
+#for pytest-cloud workers
+RUN apt-get install -y openssh-server parallel
+RUN mkdir /var/run/sshd
+RUN echo 'root:screencast' | chpasswd
+RUN sed -i 's/PermitRootLogin .+/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
 # pinned firefox version for selenium compatibility. See bd795e2f5865b4f6e6e1b88bcbbacef704675c74
 ENV FIREFOX_CHECKSUM=88d25053306d33658580973b063cd459a56e3596a3a298c1fb8ab1d52171d860
 RUN curl -LO https://launchpad.net/~ubuntu-mozilla-security/+archive/ubuntu/ppa/+build/9727836/+files/firefox_46.0.1+build1-0ubuntu0.14.04.3_amd64.deb && \
@@ -50,5 +57,8 @@ RUN make test-config
 RUN ./manage.py reset
 
 EXPOSE 8080 8081
+#for pytest-cloud workers
+EXPOSE 22
+
 
 CMD ["./manage.py", "run"]

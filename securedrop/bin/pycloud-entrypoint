@@ -21,8 +21,8 @@ trap cleanup EXIT
 echo "${workers[*]}"
 export USER=root
 export DISPLAY=:1
-echo "Host *" >> ~/.ssh/config
-echo "    StrictHostKeyChecking no" > ~/.ssh/config
+echo "Host *" > ~/.ssh/config
+echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 test -d test-venv || (
   set +euo pipefail
   pip install virtualenv

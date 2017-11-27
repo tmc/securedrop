@@ -15,7 +15,7 @@ RUN apt-get install -y git xvfb haveged curl gettext paxctl
 RUN apt-get install -y openssh-server parallel
 RUN mkdir /var/run/sshd
 RUN echo 'root:screencast' | chpasswd
-RUN sed -i 's/PermitRootLogin .+/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/PermitRootLogin .\+/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 # pinned firefox version for selenium compatibility. See bd795e2f5865b4f6e6e1b88bcbbacef704675c74

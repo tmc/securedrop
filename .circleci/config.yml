@@ -243,5 +243,4 @@ workflows:
   version: 2
   securedrop_ci:
     jobs:
-      - app-tests
       - testinfra-tests

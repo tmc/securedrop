@@ -10,7 +10,6 @@ app-images: ## Create securedrop application docker images
 .PHONY: app-test
 app-test: ## Run securedrop application level tests
 	$(MAKE) -C securedrop test
-	$(MAKE) -C testinfra test
 
 .PHONY: app-testclean
 app-testclean: ## Delete securedrop application related containers
@@ -19,6 +18,10 @@ app-testclean: ## Delete securedrop application related containers
 .PHONY: app-dev
 app-dev:
 	$(MAKE) -C securedrop dev
+
+.PHONY: testinfra-test
+testinfra-test: ## Run securedrop testinfra tests.
+	$(MAKE) -C testinfra test
 
 .PHONY: ci-spinup
 ci-spinup: ## Creates AWS EC2 hosts for testing staging environment.

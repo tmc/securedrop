@@ -172,11 +172,4 @@ workflows:
   version: 2
   securedrop_ci:
     jobs:
-      - lint
       - tests
-      - staging-test:
-          requires:
-            - lint
-      - staging-test-with-rebase:
-          requires:
-            - lint

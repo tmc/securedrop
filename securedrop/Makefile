@@ -1,5 +1,6 @@
 TAG ?= $(shell git rev-parse HEAD)
 IMAGE = securedrop
+TESTFILES = ./tests/
 
 .PHONY: assets
 assets:

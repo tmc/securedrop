@@ -17,7 +17,7 @@ test:
 		$(EXTRA_TEST_ARGS) \
 		--name $(IMAGE)-test \
 		-ti $(IMAGE)-test:$(TAG) \
-		./bin/test -x -v $(TESTFILES)
+		./bin/test -x -s -v $(TESTFILES)
 
 .PHONY: testclean
 testclean:

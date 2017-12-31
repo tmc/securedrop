@@ -438,6 +438,11 @@ class TestIntegration(unittest.TestCase):
         delete_form_inputs = soup.select('form#delete-collection')[0]('input')
         filesystem_id = delete_form_inputs[1]['value']
         col_name = delete_form_inputs[2]['value']
+
+        # wait fo rkey to exist (allow async_keygen to run)
+        utils.async.wait_for_assertion(
+            lambda: self.assertTrue(crypto_util.getkey(filesystem_id))
+        )
         resp = self.journalist_app.post('/col/delete/' + filesystem_id,
                                         follow_redirects=True)
         self.assertEquals(resp.status_code, 200)
@@ -468,8 +473,21 @@ class TestIntegration(unittest.TestCase):
         resp = self.journalist_app.get('/')
         # get all the checkbox values
         soup = BeautifulSoup(resp.data, 'html.parser')
+        delete_form_inputs = soup.select(
+            'form#process-collections input[type="checkbox"]'
+        )
+        filesystem_ids = [x['value'] for x in delete_form_inputs]
+
         checkbox_values = [checkbox['value'] for checkbox in
                            soup.select('input[name="cols_selected"]')]
+        # wait for keys to exist (allow async_keygen to run)
+        utils.async.wait_for_assertion(
+            lambda: self.assertTrue(all(
+                crypto_util.getkey(filesystem_id)
+                for filesystem_id in filesystem_ids
+            ))
+        )
+
         resp = self.journalist_app.post('/col/process', data=dict(
             action='delete',
             cols_selected=checkbox_values
